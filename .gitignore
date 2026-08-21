@@ -216,3 +216,21 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+# Credenciales y variables de entorno
+.env.*
+*.pem
+*.key
+profiles.yml
+
+# dbt
+dbt_packages/
+logs/
+
+# Node (por si acaso)
+node_modules/
+
+# Sistema / editor
+.DS_Store
+.vscode/
+.idea/
