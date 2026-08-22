@@ -8,7 +8,7 @@ Asistente conversacional que responde preguntas de negocio en lenguaje natural s
 
 Proyecto final de la diplomatura en Machine Learning e Inteligencia Artificial.
 
-**Dataset:** [Olist Brazilian E-Commerce](https://www.kaggle.com/datasets/olistbr/brazilian-ecommerce) (Kaggle). Se usa para definir el caso de negocio y los tipos de consulta — no para entrenar el LLM.
+**Dataset:** [Olist Brazilian E-Commerce](https://www.kaggle.com/datasets/olistbr/brazilian-ecommerce) (Kaggle). Se eligió por su estructura relacional real (pedidos, productos, clientes, pagos, reviews), su volumen (~100k pedidos, 2016-2018) y porque sus tablas mapean directamente con las preguntas de negocio del proyecto (ventas, tiempos de entrega, categorías). Es importante aclarar que el dataset no se usa para entrenar el LLM ni el clasificador; su función es definir el esquema del warehouse y los tipos de preguntas que el sistema debe poder responder mediante RAG, clasificación de intención y Text-to-SQL.
 
 ## Estructura del proyecto
 
