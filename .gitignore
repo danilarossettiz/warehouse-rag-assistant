@@ -235,3 +235,8 @@ node_modules/
 .vscode/
 .idea/
 dbt_internal_packages/
+
+# Datasets crudos y derivados
+data/raw/
+data/processed/
+*.csv
