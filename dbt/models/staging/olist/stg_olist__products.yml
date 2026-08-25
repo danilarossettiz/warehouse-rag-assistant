@@ -1,0 +1,44 @@
+version: 2
+
+models:
+  - name: stg_olist__products
+    description: >
+      One row per product listed on the marketplace. `product_name_length`
+      and `product_description_length` are renamed from the source's
+      misspelled `_lenght` columns.
+    columns:
+      - name: product_id
+        description: Primary key. Unique identifier of the product.
+        tests:
+          - unique
+          - not_null
+      - name: product_category_name
+        description: >
+          Product category, in Portuguese. Foreign key to
+          stg_olist__product_category_translations. Can be null for products
+          that were never categorized. Two category names present here
+          ("pc_gamer" and "portateis_cozinha_e_preparadores_de_alimentos")
+          have no matching row in the translation table — a known gap in the
+          source data — so the relationship test below is set to warn rather
+          than fail the build.
+        tests:
+          - relationships:
+              arguments:
+                to: ref('stg_olist__product_category_translations')
+                field: product_category_name
+              config:
+                severity: warn
+      - name: product_name_length
+        description: Number of characters in the product name.
+      - name: product_description_length
+        description: Number of characters in the product description.
+      - name: product_photos_qty
+        description: Number of photos published for the product.
+      - name: product_weight_g
+        description: Product weight, in grams.
+      - name: product_length_cm
+        description: Product length, in centimeters.
+      - name: product_height_cm
+        description: Product height, in centimeters.
+      - name: product_width_cm
+        description: Product width, in centimeters.

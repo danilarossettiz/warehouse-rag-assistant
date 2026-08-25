@@ -241,3 +241,4 @@ data/raw/
 data/processed/
 *.csv
 snowflake_rsa_key.p8
+.mcp.json

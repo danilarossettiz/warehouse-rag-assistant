@@ -1,0 +1,21 @@
+version: 2
+
+models:
+  - name: stg_olist__sellers
+    description: One row per seller registered on the marketplace.
+    columns:
+      - name: seller_id
+        description: Primary key. Unique identifier of the seller.
+        tests:
+          - unique
+          - not_null
+      - name: seller_zip_code_prefix
+        description: First 5 digits of the seller's zip code.
+        tests:
+          - not_null
+      - name: seller_city
+        description: Seller's city name.
+      - name: seller_state
+        description: Seller's state, as a 2-letter Brazilian state code.
+        tests:
+          - not_null

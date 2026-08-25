@@ -1,0 +1,46 @@
+version: 2
+
+models:
+  - name: stg_olist__orders
+    description: One row per order placed on the Olist marketplace.
+    columns:
+      - name: order_id
+        description: Primary key. Unique identifier of the order.
+        tests:
+          - unique
+          - not_null
+      - name: customer_id
+        description: Order-level customer identifier.
+        tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('stg_olist__customers')
+                field: customer_id
+      - name: order_status
+        description: Current status of the order.
+        tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values:
+                  - delivered
+                  - shipped
+                  - canceled
+                  - unavailable
+                  - invoiced
+                  - processing
+                  - created
+                  - approved
+      - name: order_purchase_at
+        description: Timestamp when the order was placed by the customer.
+        tests:
+          - not_null
+      - name: order_approved_at
+        description: Timestamp when payment for the order was approved.
+      - name: order_delivered_carrier_at
+        description: Timestamp when the order was handed off to the logistics carrier.
+      - name: order_delivered_customer_at
+        description: Timestamp when the order was delivered to the customer.
+      - name: order_estimated_delivery_at
+        description: Estimated delivery date shown to the customer at purchase time.

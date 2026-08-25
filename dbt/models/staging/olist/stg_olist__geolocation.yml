@@ -1,0 +1,21 @@
+version: 2
+
+models:
+  - name: stg_olist__geolocation
+    description: >
+      Brazilian zip code prefixes with an approximate lat/lng and city/state.
+      Not unique per zip_code_prefix — a prefix can span multiple lat/lng
+      points, so this is a reference table, not a dimension keyed on the prefix.
+    columns:
+      - name: geolocation_zip_code_prefix
+        description: First 5 digits of the zip code.
+        tests:
+          - not_null
+      - name: geolocation_lat
+        description: Latitude for this zip code prefix.
+      - name: geolocation_lng
+        description: Longitude for this zip code prefix.
+      - name: geolocation_city
+        description: City name for this zip code prefix.
+      - name: geolocation_state
+        description: State (2-letter Brazilian state code) for this zip code prefix.
