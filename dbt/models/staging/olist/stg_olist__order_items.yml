@@ -2,10 +2,10 @@ version: 2
 
 models:
   - name: stg_olist__order_items
-    description: One row per item (product/seller) within an order.
+    description: Una fila por item (producto/vendedor) dentro de un pedido.
     columns:
       - name: order_id
-        description: Foreign key to stg_olist__orders.
+        description: Foreign key hacia stg_olist__orders.
         tests:
           - not_null
           - relationships:
@@ -13,11 +13,11 @@ models:
                 to: ref('stg_olist__orders')
                 field: order_id
       - name: order_item_id
-        description: Sequential number of the item within the order, starting at 1.
+        description: Número secuencial del item dentro del pedido, empezando en 1.
         tests:
           - not_null
       - name: product_id
-        description: Foreign key to stg_olist__products.
+        description: Foreign key hacia stg_olist__products.
         tests:
           - not_null
           - relationships:
@@ -25,7 +25,7 @@ models:
                 to: ref('stg_olist__products')
                 field: product_id
       - name: seller_id
-        description: Foreign key to stg_olist__sellers.
+        description: Foreign key hacia stg_olist__sellers.
         tests:
           - not_null
           - relationships:
@@ -33,12 +33,12 @@ models:
                 to: ref('stg_olist__sellers')
                 field: seller_id
       - name: shipping_limit_at
-        description: Deadline for the seller to hand the item to the logistics carrier.
+        description: Fecha límite para que el vendedor entregue el item al transportista.
       - name: price
-        description: Item price, in Brazilian reais, excluding freight.
+        description: Precio del item, en reales brasileños, sin flete.
         tests:
           - not_null
       - name: freight_value
-        description: Freight cost for this item, in Brazilian reais.
+        description: Costo de flete para este item, en reales brasileños.
         tests:
           - not_null

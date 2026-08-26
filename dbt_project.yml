@@ -15,3 +15,12 @@ target-path: "target"
 clean-targets:
   - "target"
   - "dbt_packages"
+
+models:
+  warehouse_rag_assistant:
+    staging:
+      +materialized: view
+    intermediate:
+      +materialized: view
+    marts:
+      +materialized: table

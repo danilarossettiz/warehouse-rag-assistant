@@ -1,0 +1,32 @@
+version: 2
+
+models:
+  - name: fct_monthly_revenue
+    description: >
+      Ingreso por mes calendario, a través de todos los años del dataset.
+      Ingreso (revenue) se define como sum(price + freight_value) de los
+      items de pedido, atribuido al mes en que se realizó el pedido,
+      excluyendo pedidos con estado "canceled" o "unavailable" (no se
+      generó ingreso real en esos casos). Importante: esto es ingreso, no
+      ganancia — no incluye ni resta ningún costo, porque el dataset de
+      Olist no expone costos de producto ni operativos.
+      Grano: una fila por order_purchase_month.
+
+      Para responder "¿Cuál fue el ingreso total por mes en 2018?", filtrar
+      este modelo a `order_purchase_month between '2018-01-01' and '2018-12-01'`.
+    columns:
+      - name: order_purchase_month
+        description: Primer día del mes calendario.
+        tests:
+          - unique
+          - not_null
+      - name: total_orders
+        description: Cantidad de pedidos distintos comprados en este mes.
+        tests:
+          - not_null
+      - name: total_revenue
+        description: Suma de (price + freight_value) de todos los items de pedidos válidos comprados en este mes. Es ingreso, no ganancia.
+        tests:
+          - not_null
+      - name: avg_revenue_per_order
+        description: total_revenue dividido por total_orders.

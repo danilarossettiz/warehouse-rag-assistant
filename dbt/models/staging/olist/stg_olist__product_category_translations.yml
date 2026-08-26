@@ -2,14 +2,14 @@ version: 2
 
 models:
   - name: stg_olist__product_category_translations
-    description: Maps Portuguese product category names to their English translation.
+    description: Traduce los nombres de categoría de producto del portugués al inglés.
     columns:
       - name: product_category_name
-        description: Primary key. Product category name in Portuguese.
+        description: Primary key. Nombre de categoría de producto en portugués.
         tests:
           - unique
           - not_null
       - name: product_category_name_english
-        description: Product category name translated to English.
+        description: Nombre de categoría de producto traducido al inglés.
         tests:
           - not_null

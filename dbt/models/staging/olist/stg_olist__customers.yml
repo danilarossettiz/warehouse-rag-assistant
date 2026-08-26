@@ -3,25 +3,26 @@ version: 2
 models:
   - name: stg_olist__customers
     description: >
-      One row per order-level customer id. `customer_id` is unique per order,
-      while `customer_unique_id` identifies the actual person across orders.
+      Una fila por id de cliente a nivel pedido. `customer_id` es único por
+      pedido, mientras que `customer_unique_id` identifica a la persona real
+      a través de múltiples pedidos.
     columns:
       - name: customer_id
-        description: Primary key. Order-level customer identifier, referenced by stg_olist__orders.customer_id.
+        description: Primary key. Identificador de cliente a nivel pedido, referenciado por stg_olist__orders.customer_id.
         tests:
           - unique
           - not_null
       - name: customer_unique_id
-        description: Identifier of the underlying person, stable across multiple orders/customer_ids.
+        description: Identificador de la persona real, estable a través de múltiples pedidos/customer_id.
         tests:
           - not_null
       - name: customer_zip_code_prefix
-        description: First 5 digits of the customer's zip code.
+        description: Primeros 5 dígitos del código postal del cliente.
         tests:
           - not_null
       - name: customer_city
-        description: Customer's city name, as entered at checkout.
+        description: Ciudad del cliente, tal como se ingresó al momento de la compra.
       - name: customer_state
-        description: Customer's state, as a 2-letter Brazilian state code.
+        description: Estado (provincia) del cliente, como código de 2 letras brasileño.
         tests:
           - not_null

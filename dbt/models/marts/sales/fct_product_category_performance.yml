@@ -1,0 +1,36 @@
+version: 2
+
+models:
+  - name: fct_product_category_performance
+    description: >
+      Rendimiento de categorías de producto, rankeadas por cantidad de
+      pedidos distintos que incluyen esa categoría, excluyendo pedidos con
+      estado "canceled" o "unavailable". Grano: una fila por product_category.
+
+      Para responder "¿Cuáles son las 5 categorías de productos más vendidas
+      por cantidad de pedidos?", filtrar este modelo a `orders_rank <= 5`.
+      El corte de "top 5" queda a criterio del consumidor/consulta en vez
+      de estar fijo en el modelo, para que el mart siga siendo reutilizable
+      con otros cortes (top 10, etc.).
+    columns:
+      - name: product_category
+        description: Nombre de categoría de producto, en inglés (cae al portugués si no hay traducción).
+        tests:
+          - unique
+          - not_null
+      - name: total_orders
+        description: Cantidad de pedidos distintos que incluyeron al menos un item de esta categoría.
+        tests:
+          - not_null
+      - name: total_items
+        description: Cantidad total de items de pedido vendidos en esta categoría.
+        tests:
+          - not_null
+      - name: total_revenue
+        description: Suma de (price + freight_value) de todos los items de esta categoría. Es ingreso, no ganancia.
+        tests:
+          - not_null
+      - name: orders_rank
+        description: Posición (ranking) de esta categoría por total_orders, descendente (1 = más pedidos).
+        tests:
+          - not_null

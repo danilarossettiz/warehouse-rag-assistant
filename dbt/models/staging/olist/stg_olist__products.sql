@@ -13,9 +13,9 @@ renamed as (
         "product_description_lenght"::number  as product_description_length,
         "product_photos_qty"::number          as product_photos_qty,
         "product_weight_g"::number             as product_weight_g,
-        "product_length_cm"::number            as product_length_cm,
-        "product_height_cm"::number            as product_height_cm,
-        "product_width_cm"::number             as product_width_cm
+        "product_length_cm"::number             as product_length_cm,
+        "product_height_cm"::number             as product_height_cm,
+        "product_width_cm"::number              as product_width_cm
 
     from source
 

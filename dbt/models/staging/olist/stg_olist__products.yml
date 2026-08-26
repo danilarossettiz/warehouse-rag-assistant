@@ -3,24 +3,24 @@ version: 2
 models:
   - name: stg_olist__products
     description: >
-      One row per product listed on the marketplace. `product_name_length`
-      and `product_description_length` are renamed from the source's
-      misspelled `_lenght` columns.
+      Una fila por producto publicado en el marketplace. `product_name_length`
+      y `product_description_length` se renombraron desde las columnas
+      `_lenght` (mal escritas) de la fuente.
     columns:
       - name: product_id
-        description: Primary key. Unique identifier of the product.
+        description: Primary key. Identificador único del producto.
         tests:
           - unique
           - not_null
       - name: product_category_name
         description: >
-          Product category, in Portuguese. Foreign key to
-          stg_olist__product_category_translations. Can be null for products
-          that were never categorized. Two category names present here
-          ("pc_gamer" and "portateis_cozinha_e_preparadores_de_alimentos")
-          have no matching row in the translation table — a known gap in the
-          source data — so the relationship test below is set to warn rather
-          than fail the build.
+          Categoría del producto, en portugués. Foreign key hacia
+          stg_olist__product_category_translations. Puede ser nulo para
+          productos que nunca fueron categorizados. Dos categorías
+          ("pc_gamer" y "portateis_cozinha_e_preparadores_de_alimentos")
+          no tienen fila correspondiente en la tabla de traducción — un gap
+          conocido en los datos fuente — por eso el test de relationships
+          está en warn y no falla el build.
         tests:
           - relationships:
               arguments:
@@ -29,16 +29,16 @@ models:
               config:
                 severity: warn
       - name: product_name_length
-        description: Number of characters in the product name.
+        description: Cantidad de caracteres en el nombre del producto.
       - name: product_description_length
-        description: Number of characters in the product description.
+        description: Cantidad de caracteres en la descripción del producto.
       - name: product_photos_qty
-        description: Number of photos published for the product.
+        description: Cantidad de fotos publicadas para el producto.
       - name: product_weight_g
-        description: Product weight, in grams.
+        description: Peso del producto, en gramos.
       - name: product_length_cm
-        description: Product length, in centimeters.
+        description: Largo del producto, en centímetros.
       - name: product_height_cm
-        description: Product height, in centimeters.
+        description: Alto del producto, en centímetros.
       - name: product_width_cm
-        description: Product width, in centimeters.
+        description: Ancho del producto, en centímetros.

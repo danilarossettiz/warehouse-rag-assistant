@@ -1,0 +1,45 @@
+version: 2
+
+models:
+  - name: int_orders__enriched
+    description: >
+      Una fila por pedido, enriquecida con la ubicación del cliente y la
+      duración de la entrega. Grano: una fila por order_id.
+    columns:
+      - name: order_id
+        description: Primary key. Identificador único del pedido.
+        tests:
+          - unique
+          - not_null
+      - name: customer_id
+        description: Identificador de cliente a nivel pedido.
+        tests:
+          - not_null
+      - name: order_status
+        description: Estado (status) actual del pedido.
+        tests:
+          - not_null
+      - name: order_purchase_at
+        description: Fecha y hora en que se realizó el pedido.
+      - name: order_approved_at
+        description: Fecha y hora en que se aprobó el pago del pedido.
+      - name: order_delivered_carrier_at
+        description: Fecha y hora en que el pedido fue entregado al transportista.
+      - name: order_delivered_customer_at
+        description: Fecha y hora en que el pedido fue entregado al cliente.
+      - name: order_estimated_delivery_at
+        description: Fecha estimada de entrega mostrada al cliente al momento de la compra.
+      - name: customer_unique_id
+        description: Identificador de la persona real, estable a través de múltiples pedidos.
+      - name: customer_city
+        description: Ciudad del cliente que realizó el pedido.
+      - name: customer_state
+        description: Estado (provincia) del cliente que realizó el pedido, código de 2 letras brasileño.
+      - name: is_delivered
+        description: Verdadero cuando el pedido tiene un order_delivered_customer_at registrado.
+        tests:
+          - not_null
+      - name: delivery_days
+        description: >
+          Tiempo entre order_purchase_at y order_delivered_customer_at, en
+          días fraccionarios. Nulo para pedidos que nunca fueron entregados.

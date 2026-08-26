@@ -2,15 +2,15 @@ version: 2
 
 models:
   - name: stg_olist__orders
-    description: One row per order placed on the Olist marketplace.
+    description: Una fila por pedido realizado en el marketplace de Olist.
     columns:
       - name: order_id
-        description: Primary key. Unique identifier of the order.
+        description: Primary key. Identificador único del pedido.
         tests:
           - unique
           - not_null
       - name: customer_id
-        description: Order-level customer identifier.
+        description: Identificador de cliente a nivel pedido.
         tests:
           - not_null
           - relationships:
@@ -18,7 +18,7 @@ models:
                 to: ref('stg_olist__customers')
                 field: customer_id
       - name: order_status
-        description: Current status of the order.
+        description: Estado (status) actual del pedido.
         tests:
           - not_null
           - accepted_values:
@@ -33,14 +33,14 @@ models:
                   - created
                   - approved
       - name: order_purchase_at
-        description: Timestamp when the order was placed by the customer.
+        description: Fecha y hora en que el cliente realizó el pedido.
         tests:
           - not_null
       - name: order_approved_at
-        description: Timestamp when payment for the order was approved.
+        description: Fecha y hora en que se aprobó el pago del pedido.
       - name: order_delivered_carrier_at
-        description: Timestamp when the order was handed off to the logistics carrier.
+        description: Fecha y hora en que el pedido fue entregado al transportista.
       - name: order_delivered_customer_at
-        description: Timestamp when the order was delivered to the customer.
+        description: Fecha y hora en que el pedido fue entregado al cliente.
       - name: order_estimated_delivery_at
-        description: Estimated delivery date shown to the customer at purchase time.
+        description: Fecha estimada de entrega mostrada al cliente al momento de la compra.

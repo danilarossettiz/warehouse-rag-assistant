@@ -1,0 +1,46 @@
+version: 2
+
+models:
+  - name: int_order_items__enriched
+    description: >
+      Una fila por item de pedido, enriquecida con el estado/mes de compra
+      del pedido y el nombre de categoría del producto en inglés. Grano:
+      una fila por (order_id, order_item_id).
+    columns:
+      - name: order_id
+        description: Foreign key hacia el pedido al que pertenece este item.
+        tests:
+          - not_null
+      - name: order_item_id
+        description: Número secuencial del item dentro del pedido.
+        tests:
+          - not_null
+      - name: product_id
+        description: Foreign key hacia el producto vendido.
+        tests:
+          - not_null
+      - name: seller_id
+        description: Foreign key hacia el vendedor del item.
+        tests:
+          - not_null
+      - name: price
+        description: Precio del item, en reales brasileños, sin flete.
+      - name: freight_value
+        description: Costo de flete para este item, en reales brasileños.
+      - name: item_revenue
+        description: price + freight_value para este item.
+      - name: order_status
+        description: Estado del pedido al momento de la extracción.
+        tests:
+          - not_null
+      - name: order_purchase_at
+        description: Fecha y hora en que se realizó el pedido.
+      - name: order_purchase_month
+        description: Primer día del mes calendario en que se realizó el pedido.
+      - name: product_category_name
+        description: Categoría del producto, en portugués. Nula para productos sin categorizar.
+      - name: product_category_name_english
+        description: >
+          Categoría del producto traducida al inglés. Si no existe
+          traducción, cae de vuelta al nombre en portugués (gap conocido
+          para "pc_gamer" y "portateis_cozinha_e_preparadores_de_alimentos").

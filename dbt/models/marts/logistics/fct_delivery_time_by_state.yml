@@ -1,0 +1,27 @@
+version: 2
+
+models:
+  - name: fct_delivery_time_by_state
+    description: >
+      Tiempo promedio de entrega (en días desde la compra hasta la entrega
+      al cliente) por estado brasileño del cliente, considerando solo
+      pedidos que efectivamente fueron entregados. Grano: una fila por
+      customer_state.
+    columns:
+      - name: customer_state
+        description: Código de 2 letras del estado brasileño del cliente.
+        tests:
+          - unique
+          - not_null
+      - name: total_delivered_orders
+        description: Cantidad de pedidos entregados para este estado.
+        tests:
+          - not_null
+      - name: avg_delivery_days
+        description: Promedio de días entre order_purchase_at y order_delivered_customer_at.
+        tests:
+          - not_null
+      - name: min_delivery_days
+        description: Tiempo de entrega más rápido observado para este estado, en días.
+      - name: max_delivery_days
+        description: Tiempo de entrega más lento observado para este estado, en días.

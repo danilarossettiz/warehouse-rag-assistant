@@ -4,34 +4,35 @@ sources:
   - name: olist
     schema: raw
     description: >
-      Raw Olist Brazilian e-commerce dataset. Loaded from the CSVs in
-      data/raw/ into the RAW schema by scripts/load_to_snowflake.py, which
-      infers each table's schema from the CSV headers on every run.
+      Dataset crudo de e-commerce de Olist (Brasil). Cargado desde los CSV
+      en data/raw/ hacia el esquema RAW por scripts/load_to_snowflake.py,
+      que infiere el esquema de cada tabla a partir del header del CSV en
+      cada corrida.
     tables:
       - name: customers
         identifier: customers
-        description: One row per order-level customer id.
+        description: Una fila por id de cliente a nivel pedido.
       - name: geolocation
         identifier: geolocation
-        description: Brazilian zip code prefixes with an approximate lat/lng and city/state.
+        description: Prefijos de código postal brasileños con lat/lng, ciudad y estado aproximados.
       - name: orders
         identifier: orders
-        description: One row per order placed on the Olist marketplace.
+        description: Una fila por pedido realizado en el marketplace de Olist.
       - name: order_items
         identifier: order_items
-        description: One row per item (product/seller) within an order.
+        description: Una fila por item (producto/vendedor) dentro de un pedido.
       - name: order_payments
         identifier: order_payments
-        description: One row per payment transaction applied to an order.
+        description: Una fila por transacción de pago aplicada a un pedido.
       - name: order_reviews
         identifier: order_reviews
-        description: One row per customer review left for an order.
+        description: Una fila por reseña de cliente dejada para un pedido.
       - name: products
         identifier: products
-        description: One row per product listed on the marketplace.
+        description: Una fila por producto publicado en el marketplace.
       - name: product_category_name_translation
         identifier: product_category_name_translation
-        description: Maps Portuguese product category names to their English translation.
+        description: Traduce los nombres de categoría de producto del portugués al inglés.
       - name: sellers
         identifier: sellers
-        description: One row per seller registered on the marketplace.
+        description: Una fila por vendedor registrado en el marketplace.
