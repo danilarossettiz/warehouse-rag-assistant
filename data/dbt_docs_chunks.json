@@ -1,0 +1,128 @@
+[
+  {
+    "model": "stg_olist__sellers",
+    "chunk_text": "Modelo: stg_olist__sellers\nCapa: staging\nDescripción: Una fila por vendedor registrado en el marketplace.\n\nColumnas:\n  - seller_id (TEXT): Primary key. Identificador único del vendedor.\n  - seller_zip_code_prefix (TEXT): Primeros 5 dígitos del código postal del vendedor.\n  - seller_city (TEXT): Nombre de ciudad del vendedor.\n  - seller_state (TEXT): Estado (provincia) del vendedor, como código de 2 letras brasileño.\n\nRelaciones:\n  (sin relaciones documentadas)\n",
+    "metadata": {
+      "layer": "staging",
+      "database": "WAREHOUSE_RAG_ASSISTANT",
+      "schema": "PUBLIC"
+    }
+  },
+  {
+    "model": "stg_olist__order_reviews",
+    "chunk_text": "Modelo: stg_olist__order_reviews\nCapa: staging\nDescripción: Una fila por reseña de cliente dejada para un pedido.\n\nColumnas:\n  - review_id (TEXT): Identificador de la reseña. No es una primary key estricta — el mismo review_id puede aparecer para más de un order_id en los datos crudos.\n  - order_id (TEXT): Foreign key hacia stg_olist__orders.\n  - review_score (NUMBER): Puntaje de 1 (peor) a 5 (mejor) otorgado por el cliente.\n  - review_comment_title (TEXT): Título de texto libre de la reseña, en portugués. Frecuentemente nulo.\n  - review_comment_message (TEXT): Cuerpo de texto libre de la reseña, en portugués. Frecuentemente nulo.\n  - review_created_at (TIMESTAMP_NTZ): Fecha y hora en que se envió la encuesta de reseña al cliente.\n  - review_answered_at (TIMESTAMP_NTZ): Fecha y hora en que el cliente respondió la encuesta de reseña.\n\nRelaciones:\n  - order_id se relaciona con stg_olist__orders.order_id\n",
+    "metadata": {
+      "layer": "staging",
+      "database": "WAREHOUSE_RAG_ASSISTANT",
+      "schema": "PUBLIC"
+    }
+  },
+  {
+    "model": "stg_olist__order_items",
+    "chunk_text": "Modelo: stg_olist__order_items\nCapa: staging\nDescripción: Una fila por item (producto/vendedor) dentro de un pedido.\n\nColumnas:\n  - order_id (TEXT): Foreign key hacia stg_olist__orders.\n  - order_item_id (NUMBER): Número secuencial del item dentro del pedido, empezando en 1.\n  - product_id (TEXT): Foreign key hacia stg_olist__products.\n  - seller_id (TEXT): Foreign key hacia stg_olist__sellers.\n  - shipping_limit_at (TIMESTAMP_NTZ): Fecha límite para que el vendedor entregue el item al transportista.\n  - price (NUMBER): Precio del item, en reales brasileños, sin flete.\n  - freight_value (NUMBER): Costo de flete para este item, en reales brasileños.\n\nRelaciones:\n  - order_id se relaciona con stg_olist__orders.order_id\n  - product_id se relaciona con stg_olist__products.product_id\n  - seller_id se relaciona con stg_olist__sellers.seller_id\n",
+    "metadata": {
+      "layer": "staging",
+      "database": "WAREHOUSE_RAG_ASSISTANT",
+      "schema": "PUBLIC"
+    }
+  },
+  {
+    "model": "stg_olist__products",
+    "chunk_text": "Modelo: stg_olist__products\nCapa: staging\nDescripción: Una fila por producto publicado en el marketplace. `product_name_length` y `product_description_length` se renombraron desde las columnas `_lenght` (mal escritas) de la fuente.\n\nColumnas:\n  - product_id (TEXT): Primary key. Identificador único del producto.\n  - product_category_name (TEXT): Categoría del producto, en portugués. Foreign key hacia stg_olist__product_category_translations. Puede ser nulo para productos que nunca fueron categorizados. Dos categorías (\"pc_gamer\" y \"portateis_cozinha_e_preparadores_de_alimentos\") no tienen fila correspondiente en la tabla de traducción — un gap conocido en los datos fuente — por eso el test de relationships está en warn y no falla el build.\n  - product_name_length (NUMBER): Cantidad de caracteres en el nombre del producto.\n  - product_description_length (NUMBER): Cantidad de caracteres en la descripción del producto.\n  - product_photos_qty (NUMBER): Cantidad de fotos publicadas para el producto.\n  - product_weight_g (NUMBER): Peso del producto, en gramos.\n  - product_length_cm (NUMBER): Largo del producto, en centímetros.\n  - product_height_cm (NUMBER): Alto del producto, en centímetros.\n  - product_width_cm (NUMBER): Ancho del producto, en centímetros.\n\nRelaciones:\n  - product_category_name se relaciona con stg_olist__product_category_translations.product_category_name\n",
+    "metadata": {
+      "layer": "staging",
+      "database": "WAREHOUSE_RAG_ASSISTANT",
+      "schema": "PUBLIC"
+    }
+  },
+  {
+    "model": "stg_olist__orders",
+    "chunk_text": "Modelo: stg_olist__orders\nCapa: staging\nDescripción: Una fila por pedido realizado en el marketplace de Olist.\n\nColumnas:\n  - order_id (TEXT): Primary key. Identificador único del pedido.\n  - customer_id (TEXT): Identificador de cliente a nivel pedido.\n  - order_status (TEXT): Estado (status) actual del pedido.\n  - order_purchase_at (TIMESTAMP_NTZ): Fecha y hora en que el cliente realizó el pedido.\n  - order_approved_at (TIMESTAMP_NTZ): Fecha y hora en que se aprobó el pago del pedido.\n  - order_delivered_carrier_at (TIMESTAMP_NTZ): Fecha y hora en que el pedido fue entregado al transportista.\n  - order_delivered_customer_at (TIMESTAMP_NTZ): Fecha y hora en que el pedido fue entregado al cliente.\n  - order_estimated_delivery_at (TIMESTAMP_NTZ): Fecha estimada de entrega mostrada al cliente al momento de la compra.\n\nRelaciones:\n  - customer_id se relaciona con stg_olist__customers.customer_id\n",
+    "metadata": {
+      "layer": "staging",
+      "database": "WAREHOUSE_RAG_ASSISTANT",
+      "schema": "PUBLIC"
+    }
+  },
+  {
+    "model": "stg_olist__product_category_translations",
+    "chunk_text": "Modelo: stg_olist__product_category_translations\nCapa: staging\nDescripción: Traduce los nombres de categoría de producto del portugués al inglés.\n\nColumnas:\n  - product_category_name (TEXT): Primary key. Nombre de categoría de producto en portugués.\n  - product_category_name_english (TEXT): Nombre de categoría de producto traducido al inglés.\n\nRelaciones:\n  (sin relaciones documentadas)\n",
+    "metadata": {
+      "layer": "staging",
+      "database": "WAREHOUSE_RAG_ASSISTANT",
+      "schema": "PUBLIC"
+    }
+  },
+  {
+    "model": "stg_olist__order_payments",
+    "chunk_text": "Modelo: stg_olist__order_payments\nCapa: staging\nDescripción: Una fila por transacción de pago aplicada a un pedido. Un pedido puede tener múltiples pagos (ej. un voucher más una tarjeta de crédito).\n\nColumnas:\n  - order_id (TEXT): Foreign key hacia stg_olist__orders.\n  - payment_sequential (NUMBER): Número secuencial que identifica cada método de pago usado en el pedido, cuando se usó más de uno.\n  - payment_type (TEXT): Método de pago utilizado.\n  - payment_installments (NUMBER): Cantidad de cuotas elegidas por el cliente.\n  - payment_value (NUMBER): Valor de esta transacción de pago, en reales brasileños.\n\nRelaciones:\n  - order_id se relaciona con stg_olist__orders.order_id\n",
+    "metadata": {
+      "layer": "staging",
+      "database": "WAREHOUSE_RAG_ASSISTANT",
+      "schema": "PUBLIC"
+    }
+  },
+  {
+    "model": "stg_olist__geolocation",
+    "chunk_text": "Modelo: stg_olist__geolocation\nCapa: staging\nDescripción: Prefijos de código postal brasileños con lat/lng, ciudad y estado aproximados. No es único por geolocation_zip_code_prefix — un prefijo puede abarcar múltiples puntos lat/lng, así que es una tabla de referencia, no una dimensión con clave en el prefijo.\n\nColumnas:\n  - geolocation_zip_code_prefix (TEXT): Primeros 5 dígitos del código postal.\n  - geolocation_lat (FLOAT): Latitud para este prefijo de código postal.\n  - geolocation_lng (FLOAT): Longitud para este prefijo de código postal.\n  - geolocation_city (TEXT): Nombre de ciudad para este prefijo de código postal.\n  - geolocation_state (TEXT): Estado (código de 2 letras brasileño) para este prefijo de código postal.\n\nRelaciones:\n  (sin relaciones documentadas)\n",
+    "metadata": {
+      "layer": "staging",
+      "database": "WAREHOUSE_RAG_ASSISTANT",
+      "schema": "PUBLIC"
+    }
+  },
+  {
+    "model": "stg_olist__customers",
+    "chunk_text": "Modelo: stg_olist__customers\nCapa: staging\nDescripción: Una fila por id de cliente a nivel pedido. `customer_id` es único por pedido, mientras que `customer_unique_id` identifica a la persona real a través de múltiples pedidos.\n\nColumnas:\n  - customer_id (TEXT): Primary key. Identificador de cliente a nivel pedido, referenciado por stg_olist__orders.customer_id.\n  - customer_unique_id (TEXT): Identificador de la persona real, estable a través de múltiples pedidos/customer_id.\n  - customer_zip_code_prefix (TEXT): Primeros 5 dígitos del código postal del cliente.\n  - customer_city (TEXT): Ciudad del cliente, tal como se ingresó al momento de la compra.\n  - customer_state (TEXT): Estado (provincia) del cliente, como código de 2 letras brasileño.\n\nRelaciones:\n  (sin relaciones documentadas)\n",
+    "metadata": {
+      "layer": "staging",
+      "database": "WAREHOUSE_RAG_ASSISTANT",
+      "schema": "PUBLIC"
+    }
+  },
+  {
+    "model": "fct_product_category_performance",
+    "chunk_text": "Modelo: fct_product_category_performance\nCapa: marts\nDescripción: Rendimiento de categorías de producto, rankeadas por cantidad de pedidos distintos que incluyen esa categoría, excluyendo pedidos con estado \"canceled\" o \"unavailable\". Grano: una fila por product_category.\nPara responder \"¿Cuáles son las 5 categorías de productos más vendidas por cantidad de pedidos?\", filtrar este modelo a `orders_rank <= 5`. El corte de \"top 5\" queda a criterio del consumidor/consulta en vez de estar fijo en el modelo, para que el mart siga siendo reutilizable con otros cortes (top 10, etc.).\n\nColumnas:\n  - product_category (TEXT): Nombre de categoría de producto, en inglés (cae al portugués si no hay traducción).\n  - total_orders (NUMBER): Cantidad de pedidos distintos que incluyeron al menos un item de esta categoría.\n  - total_items (NUMBER): Cantidad total de items de pedido vendidos en esta categoría.\n  - total_revenue (NUMBER): Suma de (price + freight_value) de todos los items de esta categoría. Es ingreso, no ganancia.\n  - orders_rank (NUMBER): Posición (ranking) de esta categoría por total_orders, descendente (1 = más pedidos).\n\nRelaciones:\n  (sin relaciones documentadas)\n",
+    "metadata": {
+      "layer": "marts",
+      "database": "WAREHOUSE_RAG_ASSISTANT",
+      "schema": "PUBLIC"
+    }
+  },
+  {
+    "model": "fct_monthly_revenue",
+    "chunk_text": "Modelo: fct_monthly_revenue\nCapa: marts\nDescripción: Ingreso por mes calendario, a través de todos los años del dataset. Ingreso (revenue) se define como sum(price + freight_value) de los items de pedido, atribuido al mes en que se realizó el pedido, excluyendo pedidos con estado \"canceled\" o \"unavailable\" (no se generó ingreso real en esos casos). Importante: esto es ingreso, no ganancia — no incluye ni resta ningún costo, porque el dataset de Olist no expone costos de producto ni operativos. Grano: una fila por order_purchase_month.\nPara responder \"¿Cuál fue el ingreso total por mes en 2018?\", filtrar este modelo a `order_purchase_month between '2018-01-01' and '2018-12-01'`.\n\nColumnas:\n  - order_purchase_month (DATE): Primer día del mes calendario.\n  - total_orders (NUMBER): Cantidad de pedidos distintos comprados en este mes.\n  - total_revenue (NUMBER): Suma de (price + freight_value) de todos los items de pedidos válidos comprados en este mes. Es ingreso, no ganancia.\n  - avg_revenue_per_order (NUMBER): total_revenue dividido por total_orders.\n\nRelaciones:\n  (sin relaciones documentadas)\n",
+    "metadata": {
+      "layer": "marts",
+      "database": "WAREHOUSE_RAG_ASSISTANT",
+      "schema": "PUBLIC"
+    }
+  },
+  {
+    "model": "fct_delivery_time_by_state",
+    "chunk_text": "Modelo: fct_delivery_time_by_state\nCapa: marts\nDescripción: Tiempo promedio de entrega (en días desde la compra hasta la entrega al cliente) por estado brasileño del cliente, considerando solo pedidos que efectivamente fueron entregados. Grano: una fila por customer_state.\n\nColumnas:\n  - customer_state (TEXT): Código de 2 letras del estado brasileño del cliente.\n  - total_delivered_orders (NUMBER): Cantidad de pedidos entregados para este estado.\n  - avg_delivery_days (NUMBER): Promedio de días entre order_purchase_at y order_delivered_customer_at.\n  - min_delivery_days (NUMBER): Tiempo de entrega más rápido observado para este estado, en días.\n  - max_delivery_days (NUMBER): Tiempo de entrega más lento observado para este estado, en días.\n\nRelaciones:\n  (sin relaciones documentadas)\n",
+    "metadata": {
+      "layer": "marts",
+      "database": "WAREHOUSE_RAG_ASSISTANT",
+      "schema": "PUBLIC"
+    }
+  },
+  {
+    "model": "int_orders__enriched",
+    "chunk_text": "Modelo: int_orders__enriched\nCapa: intermediate\nDescripción: Una fila por pedido, enriquecida con la ubicación del cliente y la duración de la entrega. Grano: una fila por order_id.\n\nColumnas:\n  - order_id (TEXT): Primary key. Identificador único del pedido.\n  - customer_id (TEXT): Identificador de cliente a nivel pedido.\n  - order_status (TEXT): Estado (status) actual del pedido.\n  - order_purchase_at (TIMESTAMP_NTZ): Fecha y hora en que se realizó el pedido.\n  - order_approved_at (TIMESTAMP_NTZ): Fecha y hora en que se aprobó el pago del pedido.\n  - order_delivered_carrier_at (TIMESTAMP_NTZ): Fecha y hora en que el pedido fue entregado al transportista.\n  - order_delivered_customer_at (TIMESTAMP_NTZ): Fecha y hora en que el pedido fue entregado al cliente.\n  - order_estimated_delivery_at (TIMESTAMP_NTZ): Fecha estimada de entrega mostrada al cliente al momento de la compra.\n  - customer_unique_id (TEXT): Identificador de la persona real, estable a través de múltiples pedidos.\n  - customer_city (TEXT): Ciudad del cliente que realizó el pedido.\n  - customer_state (TEXT): Estado (provincia) del cliente que realizó el pedido, código de 2 letras brasileño.\n  - is_delivered (BOOLEAN): Verdadero cuando el pedido tiene un order_delivered_customer_at registrado.\n  - delivery_days (NUMBER): Tiempo entre order_purchase_at y order_delivered_customer_at, en días fraccionarios. Nulo para pedidos que nunca fueron entregados.\n\nRelaciones:\n  (sin relaciones documentadas)\n",
+    "metadata": {
+      "layer": "intermediate",
+      "database": "WAREHOUSE_RAG_ASSISTANT",
+      "schema": "PUBLIC"
+    }
+  },
+  {
+    "model": "int_order_items__enriched",
+    "chunk_text": "Modelo: int_order_items__enriched\nCapa: intermediate\nDescripción: Una fila por item de pedido, enriquecida con el estado/mes de compra del pedido y el nombre de categoría del producto en inglés. Grano: una fila por (order_id, order_item_id).\n\nColumnas:\n  - order_id (TEXT): Foreign key hacia el pedido al que pertenece este item.\n  - order_item_id (NUMBER): Número secuencial del item dentro del pedido.\n  - product_id (TEXT): Foreign key hacia el producto vendido.\n  - seller_id (TEXT): Foreign key hacia el vendedor del item.\n  - price (NUMBER): Precio del item, en reales brasileños, sin flete.\n  - freight_value (NUMBER): Costo de flete para este item, en reales brasileños.\n  - item_revenue (NUMBER): price + freight_value para este item.\n  - order_status (TEXT): Estado del pedido al momento de la extracción.\n  - order_purchase_at (TIMESTAMP_NTZ): Fecha y hora en que se realizó el pedido.\n  - order_purchase_month (DATE): Primer día del mes calendario en que se realizó el pedido.\n  - product_category_name (TEXT): Categoría del producto, en portugués. Nula para productos sin categorizar.\n  - product_category_name_english (TEXT): Categoría del producto traducida al inglés. Si no existe traducción, cae de vuelta al nombre en portugués (gap conocido para \"pc_gamer\" y \"portateis_cozinha_e_preparadores_de_alimentos\").\n\nRelaciones:\n  (sin relaciones documentadas)\n",
+    "metadata": {
+      "layer": "intermediate",
+      "database": "WAREHOUSE_RAG_ASSISTANT",
+      "schema": "PUBLIC"
+    }
+  }
+]
