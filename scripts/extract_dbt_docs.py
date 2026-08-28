@@ -97,6 +97,19 @@ for node_id, node in manifest["nodes"].items():
     else:
         texto_relaciones = "  (sin relaciones documentadas)"
 
+    # Armamos el texto de lineage (de qué modelos depende), vía depends_on.nodes.
+    # Esto es distinto de "Relaciones": no son foreign keys, es de dónde se construye el modelo.
+    nodos_de_los_que_depende = node.get("depends_on", {}).get("nodes", [])
+    modelos_de_los_que_depende = [
+        manifest["nodes"][dep_id]["name"]
+        for dep_id in nodos_de_los_que_depende
+        if dep_id.startswith("model.") and dep_id in manifest["nodes"]
+    ]
+    if modelos_de_los_que_depende:
+        texto_depende_de = "\n".join(f"  - {m}" for m in modelos_de_los_que_depende)
+    else:
+        texto_depende_de = "  (no depende de otros modelos)"
+
     # Armamos el chunk final, en texto natural
     chunk_text = f"""Modelo: {nombre_modelo}
 Capa: {capa}
@@ -107,6 +120,9 @@ Columnas:
 
 Relaciones:
 {texto_relaciones}
+
+Depende de:
+{texto_depende_de}
 """
 
     chunks.append({
