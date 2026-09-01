@@ -28,7 +28,7 @@ def main():
 
     print(f"Generando embeddings para {len(chunks)} chunks...")
     # Extraemos solo el texto de cada chunk para pasárselo al modelo
-    texts = [chunk["text"] for chunk in chunks]
+    texts = [chunk["chunk_text"] for chunk in chunks]
 
     # encode() convierte cada texto en un vector de 384 números.
     # show_progress_bar=True te muestra el avance en la terminal.
