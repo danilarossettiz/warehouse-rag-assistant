@@ -18,6 +18,8 @@ from pathlib import Path
 import snowflake.connector
 from dotenv import load_dotenv
 
+from cryptography.hazmat.primitives import serialization
+
 load_dotenv()
 
 RAW_DIR = Path(__file__).resolve().parent.parent / "data" / "raw"
@@ -32,16 +34,29 @@ def table_name_from_file(filename: str) -> str:
     return name.upper()
 
 
+def load_private_key():
+    key_path = os.environ["SNOWFLAKE_PRIVATE_KEY_PATH"]
+    with open(key_path, "rb") as key_file:
+        p_key = serialization.load_pem_private_key(
+            key_file.read(),
+            password=None,
+        )
+    return p_key.private_bytes(
+        encoding=serialization.Encoding.DER,
+        format=serialization.PrivateFormat.PKCS8,
+        encryption_algorithm=serialization.NoEncryption(),
+    )
+
+
 def get_connection():
     return snowflake.connector.connect(
         account=os.environ["SNOWFLAKE_ACCOUNT"],
         user=os.environ["SNOWFLAKE_USER"],
-        password=os.environ["SNOWFLAKE_PASSWORD"],
+        private_key=load_private_key(),
         role=os.environ["SNOWFLAKE_ROLE"],
         warehouse=os.environ["SNOWFLAKE_WAREHOUSE"],
         database=os.environ["SNOWFLAKE_DATABASE"],
     )
-
 
 def setup_schema_and_stage(cur):
     cur.execute(f"CREATE SCHEMA IF NOT EXISTS {SCHEMA}")
