@@ -18,7 +18,13 @@ models:
                 to: ref('stg_olist__customers')
                 field: customer_id
       - name: order_status
-        description: Estado (status) actual del pedido.
+        description: >
+          Estado (status) actual del pedido. Valores posibles: created (pedido
+          recién creado en el sistema), approved (pago del pedido aprobado),
+          invoiced (pedido facturado), processing (pedido en preparación),
+          shipped (pedido despachado, en camino al cliente), delivered (pedido
+          entregado al cliente), canceled (pedido cancelado), unavailable
+          (pedido no disponible, no se pudo procesar).
         tests:
           - not_null
           - accepted_values:

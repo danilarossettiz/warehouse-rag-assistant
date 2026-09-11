@@ -34,7 +34,10 @@ def main():
         print(f"La colección '{COLLECTION_NAME}' ya existe, la borro para recrearla...")
         client.delete_collection(COLLECTION_NAME)
 
-    collection = client.create_collection(name=COLLECTION_NAME)
+    collection = client.create_collection(
+        name=COLLECTION_NAME,
+        metadata={"hnsw:space": "cosine"}
+    )
 
     # Preparamos las cuatro listas paralelas que pide Chroma:
     # ids, documentos (texto), embeddings y metadata.

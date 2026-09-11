@@ -9,24 +9,6 @@
     }
   },
   {
-    "model": "stg_olist__order_reviews",
-    "chunk_text": "Modelo: stg_olist__order_reviews\nCapa: staging\nDescripción: Una fila por reseña de cliente dejada para un pedido.\n\nColumnas:\n  - review_id (TEXT): Identificador de la reseña. No es una primary key estricta — el mismo review_id puede aparecer para más de un order_id en los datos crudos.\n  - order_id (TEXT): Foreign key hacia stg_olist__orders.\n  - review_score (NUMBER): Puntaje de 1 (peor) a 5 (mejor) otorgado por el cliente.\n  - review_comment_title (TEXT): Título de texto libre de la reseña, en portugués. Frecuentemente nulo.\n  - review_comment_message (TEXT): Cuerpo de texto libre de la reseña, en portugués. Frecuentemente nulo.\n  - review_created_at (TIMESTAMP_NTZ): Fecha y hora en que se envió la encuesta de reseña al cliente.\n  - review_answered_at (TIMESTAMP_NTZ): Fecha y hora en que el cliente respondió la encuesta de reseña.\n\nRelaciones:\n  - order_id se relaciona con stg_olist__orders.order_id\n\nDepende de:\n  (no depende de otros modelos)\n",
-    "metadata": {
-      "layer": "staging",
-      "database": "WAREHOUSE_RAG_ASSISTANT",
-      "schema": "PUBLIC"
-    }
-  },
-  {
-    "model": "stg_olist__order_items",
-    "chunk_text": "Modelo: stg_olist__order_items\nCapa: staging\nDescripción: Una fila por item (producto/vendedor) dentro de un pedido.\n\nColumnas:\n  - order_id (TEXT): Foreign key hacia stg_olist__orders.\n  - order_item_id (NUMBER): Número secuencial del item dentro del pedido, empezando en 1.\n  - product_id (TEXT): Foreign key hacia stg_olist__products.\n  - seller_id (TEXT): Foreign key hacia stg_olist__sellers.\n  - shipping_limit_at (TIMESTAMP_NTZ): Fecha límite para que el vendedor entregue el item al transportista.\n  - price (NUMBER): Precio del item, en reales brasileños, sin flete.\n  - freight_value (NUMBER): Costo de flete para este item, en reales brasileños.\n\nRelaciones:\n  - order_id se relaciona con stg_olist__orders.order_id\n  - product_id se relaciona con stg_olist__products.product_id\n  - seller_id se relaciona con stg_olist__sellers.seller_id\n\nDepende de:\n  (no depende de otros modelos)\n",
-    "metadata": {
-      "layer": "staging",
-      "database": "WAREHOUSE_RAG_ASSISTANT",
-      "schema": "PUBLIC"
-    }
-  },
-  {
     "model": "stg_olist__products",
     "chunk_text": "Modelo: stg_olist__products\nCapa: staging\nDescripción: Una fila por producto publicado en el marketplace. `product_name_length` y `product_description_length` se renombraron desde las columnas `_lenght` (mal escritas) de la fuente.\n\nColumnas:\n  - product_id (TEXT): Primary key. Identificador único del producto.\n  - product_category_name (TEXT): Categoría del producto, en portugués. Foreign key hacia stg_olist__product_category_translations. Puede ser nulo para productos que nunca fueron categorizados. Dos categorías (\"pc_gamer\" y \"portateis_cozinha_e_preparadores_de_alimentos\") no tienen fila correspondiente en la tabla de traducción — un gap conocido en los datos fuente — por eso el test de relationships está en warn y no falla el build.\n  - product_name_length (NUMBER): Cantidad de caracteres en el nombre del producto.\n  - product_description_length (NUMBER): Cantidad de caracteres en la descripción del producto.\n  - product_photos_qty (NUMBER): Cantidad de fotos publicadas para el producto.\n  - product_weight_g (NUMBER): Peso del producto, en gramos.\n  - product_length_cm (NUMBER): Largo del producto, en centímetros.\n  - product_height_cm (NUMBER): Alto del producto, en centímetros.\n  - product_width_cm (NUMBER): Ancho del producto, en centímetros.\n\nRelaciones:\n  - product_category_name se relaciona con stg_olist__product_category_translations.product_category_name\n\nDepende de:\n  (no depende de otros modelos)\n",
     "metadata": {
@@ -36,26 +18,8 @@
     }
   },
   {
-    "model": "stg_olist__orders",
-    "chunk_text": "Modelo: stg_olist__orders\nCapa: staging\nDescripción: Una fila por pedido realizado en el marketplace de Olist.\n\nColumnas:\n  - order_id (TEXT): Primary key. Identificador único del pedido.\n  - customer_id (TEXT): Identificador de cliente a nivel pedido.\n  - order_status (TEXT): Estado (status) actual del pedido.\n  - order_purchase_at (TIMESTAMP_NTZ): Fecha y hora en que el cliente realizó el pedido.\n  - order_approved_at (TIMESTAMP_NTZ): Fecha y hora en que se aprobó el pago del pedido.\n  - order_delivered_carrier_at (TIMESTAMP_NTZ): Fecha y hora en que el pedido fue entregado al transportista.\n  - order_delivered_customer_at (TIMESTAMP_NTZ): Fecha y hora en que el pedido fue entregado al cliente.\n  - order_estimated_delivery_at (TIMESTAMP_NTZ): Fecha estimada de entrega mostrada al cliente al momento de la compra.\n\nRelaciones:\n  - customer_id se relaciona con stg_olist__customers.customer_id\n\nDepende de:\n  (no depende de otros modelos)\n",
-    "metadata": {
-      "layer": "staging",
-      "database": "WAREHOUSE_RAG_ASSISTANT",
-      "schema": "PUBLIC"
-    }
-  },
-  {
     "model": "stg_olist__product_category_translations",
     "chunk_text": "Modelo: stg_olist__product_category_translations\nCapa: staging\nDescripción: Traduce los nombres de categoría de producto del portugués al inglés.\n\nColumnas:\n  - product_category_name (TEXT): Primary key. Nombre de categoría de producto en portugués.\n  - product_category_name_english (TEXT): Nombre de categoría de producto traducido al inglés.\n\nRelaciones:\n  (sin relaciones documentadas)\n\nDepende de:\n  (no depende de otros modelos)\n",
-    "metadata": {
-      "layer": "staging",
-      "database": "WAREHOUSE_RAG_ASSISTANT",
-      "schema": "PUBLIC"
-    }
-  },
-  {
-    "model": "stg_olist__order_payments",
-    "chunk_text": "Modelo: stg_olist__order_payments\nCapa: staging\nDescripción: Una fila por transacción de pago aplicada a un pedido. Un pedido puede tener múltiples pagos (ej. un voucher más una tarjeta de crédito).\n\nColumnas:\n  - order_id (TEXT): Foreign key hacia stg_olist__orders.\n  - payment_sequential (NUMBER): Número secuencial que identifica cada método de pago usado en el pedido, cuando se usó más de uno.\n  - payment_type (TEXT): Método de pago utilizado.\n  - payment_installments (NUMBER): Cantidad de cuotas elegidas por el cliente.\n  - payment_value (NUMBER): Valor de esta transacción de pago, en reales brasileños.\n\nRelaciones:\n  - order_id se relaciona con stg_olist__orders.order_id\n\nDepende de:\n  (no depende de otros modelos)\n",
     "metadata": {
       "layer": "staging",
       "database": "WAREHOUSE_RAG_ASSISTANT",
@@ -108,8 +72,44 @@
     }
   },
   {
+    "model": "stg_olist__orders",
+    "chunk_text": "Modelo: stg_olist__orders\nCapa: staging\nDescripción: Una fila por pedido realizado en el marketplace de Olist.\n\nColumnas:\n  - order_id (TEXT): Primary key. Identificador único del pedido.\n  - customer_id (TEXT): Identificador de cliente a nivel pedido.\n  - order_status (TEXT): Estado (status) actual del pedido. Valores posibles: created (pedido recién creado en el sistema), approved (pago del pedido aprobado), invoiced (pedido facturado), processing (pedido en preparación), shipped (pedido despachado, en camino al cliente), delivered (pedido entregado al cliente), canceled (pedido cancelado), unavailable (pedido no disponible, no se pudo procesar).\n  - order_purchase_at (TIMESTAMP_NTZ): Fecha y hora en que el cliente realizó el pedido.\n  - order_approved_at (TIMESTAMP_NTZ): Fecha y hora en que se aprobó el pago del pedido.\n  - order_delivered_carrier_at (TIMESTAMP_NTZ): Fecha y hora en que el pedido fue entregado al transportista.\n  - order_delivered_customer_at (TIMESTAMP_NTZ): Fecha y hora en que el pedido fue entregado al cliente.\n  - order_estimated_delivery_at (TIMESTAMP_NTZ): Fecha estimada de entrega mostrada al cliente al momento de la compra.\n\nRelaciones:\n  - customer_id se relaciona con stg_olist__customers.customer_id\n\nDepende de:\n  (no depende de otros modelos)\n",
+    "metadata": {
+      "layer": "staging",
+      "database": "WAREHOUSE_RAG_ASSISTANT",
+      "schema": "PUBLIC"
+    }
+  },
+  {
+    "model": "stg_olist__order_items",
+    "chunk_text": "Modelo: stg_olist__order_items\nCapa: staging\nDescripción: Una fila por item (producto/vendedor) dentro de un pedido.\n\nColumnas:\n  - order_id (TEXT): Foreign key hacia stg_olist__orders.\n  - order_item_id (NUMBER): Número secuencial del item dentro del pedido, empezando en 1.\n  - product_id (TEXT): Foreign key hacia stg_olist__products.\n  - seller_id (TEXT): Foreign key hacia stg_olist__sellers.\n  - shipping_limit_at (TIMESTAMP_NTZ): Fecha límite para que el vendedor entregue el item al transportista.\n  - price (NUMBER): Precio del item, en reales brasileños, sin flete.\n  - freight_value (NUMBER): Costo de flete para este item, en reales brasileños.\n\nRelaciones:\n  - order_id se relaciona con stg_olist__orders.order_id\n  - product_id se relaciona con stg_olist__products.product_id\n  - seller_id se relaciona con stg_olist__sellers.seller_id\n\nDepende de:\n  (no depende de otros modelos)\n",
+    "metadata": {
+      "layer": "staging",
+      "database": "WAREHOUSE_RAG_ASSISTANT",
+      "schema": "PUBLIC"
+    }
+  },
+  {
+    "model": "stg_olist__order_payments",
+    "chunk_text": "Modelo: stg_olist__order_payments\nCapa: staging\nDescripción: Una fila por transacción de pago aplicada a un pedido. Un pedido puede tener múltiples pagos (ej. un voucher más una tarjeta de crédito).\n\nColumnas:\n  - order_id (TEXT): Foreign key hacia stg_olist__orders.\n  - payment_sequential (NUMBER): Número secuencial que identifica cada método de pago usado en el pedido, cuando se usó más de uno.\n  - payment_type (TEXT): Método de pago utilizado.\n  - payment_installments (NUMBER): Cantidad de cuotas elegidas por el cliente.\n  - payment_value (NUMBER): Valor de esta transacción de pago, en reales brasileños.\n\nRelaciones:\n  - order_id se relaciona con stg_olist__orders.order_id\n\nDepende de:\n  (no depende de otros modelos)\n",
+    "metadata": {
+      "layer": "staging",
+      "database": "WAREHOUSE_RAG_ASSISTANT",
+      "schema": "PUBLIC"
+    }
+  },
+  {
+    "model": "stg_olist__order_reviews",
+    "chunk_text": "Modelo: stg_olist__order_reviews\nCapa: staging\nDescripción: Una fila por reseña de cliente dejada para un pedido.\n\nColumnas:\n  - review_id (TEXT): Identificador de la reseña. No es una primary key estricta — el mismo review_id puede aparecer para más de un order_id en los datos crudos.\n  - order_id (TEXT): Foreign key hacia stg_olist__orders.\n  - review_score (NUMBER): Puntaje de 1 (peor) a 5 (mejor) otorgado por el cliente.\n  - review_comment_title (TEXT): Título de texto libre de la reseña, en portugués. Frecuentemente nulo.\n  - review_comment_message (TEXT): Cuerpo de texto libre de la reseña, en portugués. Frecuentemente nulo.\n  - review_created_at (TIMESTAMP_NTZ): Fecha y hora en que se envió la encuesta de reseña al cliente.\n  - review_answered_at (TIMESTAMP_NTZ): Fecha y hora en que el cliente respondió la encuesta de reseña.\n\nRelaciones:\n  - order_id se relaciona con stg_olist__orders.order_id\n\nDepende de:\n  (no depende de otros modelos)\n",
+    "metadata": {
+      "layer": "staging",
+      "database": "WAREHOUSE_RAG_ASSISTANT",
+      "schema": "PUBLIC"
+    }
+  },
+  {
     "model": "int_orders__enriched",
-    "chunk_text": "Modelo: int_orders__enriched\nCapa: intermediate\nDescripción: Una fila por pedido, enriquecida con la ubicación del cliente y la duración de la entrega. Grano: una fila por order_id.\n\nColumnas:\n  - order_id (TEXT): Primary key. Identificador único del pedido.\n  - customer_id (TEXT): Identificador de cliente a nivel pedido.\n  - order_status (TEXT): Estado (status) actual del pedido.\n  - order_purchase_at (TIMESTAMP_NTZ): Fecha y hora en que se realizó el pedido.\n  - order_approved_at (TIMESTAMP_NTZ): Fecha y hora en que se aprobó el pago del pedido.\n  - order_delivered_carrier_at (TIMESTAMP_NTZ): Fecha y hora en que el pedido fue entregado al transportista.\n  - order_delivered_customer_at (TIMESTAMP_NTZ): Fecha y hora en que el pedido fue entregado al cliente.\n  - order_estimated_delivery_at (TIMESTAMP_NTZ): Fecha estimada de entrega mostrada al cliente al momento de la compra.\n  - customer_unique_id (TEXT): Identificador de la persona real, estable a través de múltiples pedidos.\n  - customer_city (TEXT): Ciudad del cliente que realizó el pedido.\n  - customer_state (TEXT): Estado (provincia) del cliente que realizó el pedido, código de 2 letras brasileño.\n  - is_delivered (BOOLEAN): Verdadero cuando el pedido tiene un order_delivered_customer_at registrado.\n  - delivery_days (NUMBER): Tiempo entre order_purchase_at y order_delivered_customer_at, en días fraccionarios. Nulo para pedidos que nunca fueron entregados.\n\nRelaciones:\n  (sin relaciones documentadas)\n\nDepende de:\n  - stg_olist__orders\n  - stg_olist__customers\n",
+    "chunk_text": "Modelo: int_orders__enriched\nCapa: intermediate\nDescripción: Una fila por pedido, enriquecida con la ubicación del cliente y la duración de la entrega. Grano: una fila por order_id.\n\nColumnas:\n  - order_id (TEXT): Primary key. Identificador único del pedido.\n  - customer_id (TEXT): Identificador de cliente a nivel pedido.\n  - order_status (TEXT): Estado actual del pedido. Ver valores posibles en stg_olist__orders.order_status.\n  - order_purchase_at (TIMESTAMP_NTZ): Fecha y hora en que se realizó el pedido.\n  - order_approved_at (TIMESTAMP_NTZ): Fecha y hora en que se aprobó el pago del pedido.\n  - order_delivered_carrier_at (TIMESTAMP_NTZ): Fecha y hora en que el pedido fue entregado al transportista.\n  - order_delivered_customer_at (TIMESTAMP_NTZ): Fecha y hora en que el pedido fue entregado al cliente.\n  - order_estimated_delivery_at (TIMESTAMP_NTZ): Fecha estimada de entrega mostrada al cliente al momento de la compra.\n  - customer_unique_id (TEXT): Identificador de la persona real, estable a través de múltiples pedidos.\n  - customer_city (TEXT): Ciudad del cliente que realizó el pedido.\n  - customer_state (TEXT): Estado (provincia) del cliente que realizó el pedido, código de 2 letras brasileño.\n  - is_delivered (BOOLEAN): Verdadero cuando el pedido tiene un order_delivered_customer_at registrado.\n  - delivery_days (NUMBER): Tiempo entre order_purchase_at y order_delivered_customer_at, en días fraccionarios. Nulo para pedidos que nunca fueron entregados.\n\nRelaciones:\n  (sin relaciones documentadas)\n\nDepende de:\n  - stg_olist__orders\n  - stg_olist__customers\n",
     "metadata": {
       "layer": "intermediate",
       "database": "WAREHOUSE_RAG_ASSISTANT",
@@ -118,7 +118,7 @@
   },
   {
     "model": "int_order_items__enriched",
-    "chunk_text": "Modelo: int_order_items__enriched\nCapa: intermediate\nDescripción: Una fila por item de pedido, enriquecida con el estado/mes de compra del pedido y el nombre de categoría del producto en inglés. Grano: una fila por (order_id, order_item_id).\n\nColumnas:\n  - order_id (TEXT): Foreign key hacia el pedido al que pertenece este item.\n  - order_item_id (NUMBER): Número secuencial del item dentro del pedido.\n  - product_id (TEXT): Foreign key hacia el producto vendido.\n  - seller_id (TEXT): Foreign key hacia el vendedor del item.\n  - price (NUMBER): Precio del item, en reales brasileños, sin flete.\n  - freight_value (NUMBER): Costo de flete para este item, en reales brasileños.\n  - item_revenue (NUMBER): price + freight_value para este item.\n  - order_status (TEXT): Estado del pedido al momento de la extracción.\n  - order_purchase_at (TIMESTAMP_NTZ): Fecha y hora en que se realizó el pedido.\n  - order_purchase_month (DATE): Primer día del mes calendario en que se realizó el pedido.\n  - product_category_name (TEXT): Categoría del producto, en portugués. Nula para productos sin categorizar.\n  - product_category_name_english (TEXT): Categoría del producto traducida al inglés. Si no existe traducción, cae de vuelta al nombre en portugués (gap conocido para \"pc_gamer\" y \"portateis_cozinha_e_preparadores_de_alimentos\").\n\nRelaciones:\n  (sin relaciones documentadas)\n\nDepende de:\n  - stg_olist__order_items\n  - stg_olist__orders\n  - stg_olist__products\n  - stg_olist__product_category_translations\n",
+    "chunk_text": "Modelo: int_order_items__enriched\nCapa: intermediate\nDescripción: Una fila por item de pedido, enriquecida con el estado/mes de compra del pedido y el nombre de categoría del producto en inglés. Grano: una fila por (order_id, order_item_id).\n\nColumnas:\n  - order_id (TEXT): Foreign key hacia el pedido al que pertenece este item.\n  - order_item_id (NUMBER): Número secuencial del item dentro del pedido.\n  - product_id (TEXT): Foreign key hacia el producto vendido.\n  - seller_id (TEXT): Foreign key hacia el vendedor del item.\n  - price (NUMBER): Precio del item, en reales brasileños, sin flete.\n  - freight_value (NUMBER): Costo de flete para este item, en reales brasileños.\n  - item_revenue (NUMBER): price + freight_value para este item.\n  - order_status (TEXT): Estado del pedido al momento de la extracción. Ver valores posibles en stg_olist__orders.order_status.\n  - order_purchase_at (TIMESTAMP_NTZ): Fecha y hora en que se realizó el pedido.\n  - order_purchase_month (DATE): Primer día del mes calendario en que se realizó el pedido.\n  - product_category_name (TEXT): Categoría del producto, en portugués. Nula para productos sin categorizar.\n  - product_category_name_english (TEXT): Categoría del producto traducida al inglés. Si no existe traducción, cae de vuelta al nombre en portugués (gap conocido para \"pc_gamer\" y \"portateis_cozinha_e_preparadores_de_alimentos\").\n\nRelaciones:\n  (sin relaciones documentadas)\n\nDepende de:\n  - stg_olist__order_items\n  - stg_olist__orders\n  - stg_olist__products\n  - stg_olist__product_category_translations\n",
     "metadata": {
       "layer": "intermediate",
       "database": "WAREHOUSE_RAG_ASSISTANT",
