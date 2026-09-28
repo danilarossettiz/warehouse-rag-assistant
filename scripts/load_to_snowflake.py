@@ -48,12 +48,12 @@ def load_private_key():
     )
 
 
-def get_connection():
+def get_connection(role=None):
     return snowflake.connector.connect(
         account=os.environ["SNOWFLAKE_ACCOUNT"],
         user=os.environ["SNOWFLAKE_USER"],
         private_key=load_private_key(),
-        role=os.environ["SNOWFLAKE_ROLE"],
+        role=role or os.environ["SNOWFLAKE_ROLE"],
         warehouse=os.environ["SNOWFLAKE_WAREHOUSE"],
         database=os.environ["SNOWFLAKE_DATABASE"],
     )
