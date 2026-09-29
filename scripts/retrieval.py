@@ -35,8 +35,7 @@ def _get_collection():
         _collection = client.get_collection(name=COLLECTION_NAME)
     return _collection
 
-
-def retrieve(pregunta: str, k: int = 3) -> list[dict]:
+def retrieve(pregunta: str, k: int = 5) -> list[dict]:
     """
     Busca los k chunks de documentación más relevantes para una pregunta.
 
