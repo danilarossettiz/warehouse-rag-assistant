@@ -47,14 +47,20 @@ def _cargar_modelos():
         _modelo = joblib.load(MODEL_PATH)
 
 
-def clasificar(pregunta: str) -> str:
+def clasificar(pregunta: str) -> tuple[str, float]:
     """Clasifica una pregunta en "metrica", "definicion" o
-    "fuera_de_alcance"."""
+    "fuera_de_alcance", junto con la confianza de la predicción."""
     _cargar_modelos()
     texto_limpio = _limpiar_texto(pregunta)
     vector = _vectorizer.transform([texto_limpio])
-    prediccion = _modelo.predict(vector)[0]
-    return prediccion
+
+    probabilidades = _modelo.predict_proba(vector)[0]
+    indice_max = probabilidades.argmax()
+
+    categoria = str(_modelo.classes_[indice_max])
+    confianza = float(probabilidades[indice_max])
+
+    return categoria, confianza
 
 
 if __name__ == "__main__":

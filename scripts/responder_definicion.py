@@ -7,6 +7,7 @@ redactar la respuesta final.
 """
 
 from scripts.gemini_client import llamar_gemini
+from scripts.rag_utils import formatear_chunks_como_texto
 
 UMBRAL_DISTANCIA = 0.65
 
@@ -22,10 +23,7 @@ def _armar_prompt_definicion(pregunta: str, chunks: list[dict]) -> str:
     Arma el prompt para Gemini combinando la pregunta del usuario
     con el texto de los chunks recuperados por RAG.
     """
-    contexto = "\n\n".join(
-        f"[Modelo: {chunk['modelo']}]\n{chunk['texto']}"
-        for chunk in chunks
-    )
+    contexto = formatear_chunks_como_texto(chunks)
 
     prompt = f"""Sos un asistente que responde preguntas sobre un data warehouse de e-commerce (dataset Olist).
 
