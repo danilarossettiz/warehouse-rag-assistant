@@ -50,7 +50,7 @@ if __name__ == "__main__":
         print(f"\n{'=' * 60}")
         print(f"Pregunta {i}: {pregunta}")
         print("=" * 60)
-        sql, resultado = generar_y_ejecutar(pregunta, contexto)
+        sql, resultado, _datos = generar_y_ejecutar(pregunta, contexto)
         print(f"\nResultado: {resultado}")
         if "No pude generar" not in resultado:
             exitosas += 1

@@ -8,7 +8,7 @@ de conversación de 1 turno.
 
 from scripts.classify_intent import clasificar
 from scripts.retrieval import retrieve
-from scripts.responder_definicion import generar_respuesta_definicion
+from scripts.generar_respuestas import generar_respuesta_definicion, generar_respuesta_metrica
 from scripts.text_to_sql import generar_y_ejecutar
 from scripts.rag_utils import formatear_chunks_como_texto
 
@@ -51,16 +51,18 @@ def responder(pregunta_usuario: str, contexto_anterior: dict | None = None) -> d
         "confianza": confianza,
         "sql": None,
         "chunks_recuperados": None,
+        "datos": None,
     }
 
     if categoria == "metrica":
         chunks = retrieve(pregunta_efectiva)
         contexto_rag = formatear_chunks_como_texto(chunks)
-        sql, resultado = generar_y_ejecutar(pregunta_efectiva, contexto_rag)
+        sql, resultado, datos = generar_y_ejecutar(pregunta_efectiva, contexto_rag)
 
-        respuesta = str(resultado)
+        respuesta = generar_respuesta_metrica(pregunta_efectiva, resultado)
         resultado_metadata["sql"] = sql
         resultado_metadata["chunks_recuperados"] = chunks
+        resultado_metadata["datos"] = datos
 
     elif categoria == "definicion":
         chunks = retrieve(pregunta_efectiva)

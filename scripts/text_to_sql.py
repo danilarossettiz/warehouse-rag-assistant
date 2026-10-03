@@ -115,7 +115,7 @@ def generar_y_ejecutar(pregunta_usuario: str, contexto_rag: str, intentos: int =
             columnas, filas = ejecutar_sql(sql)
             resultado = formatear_resultado(columnas, filas)
             loggear_corrida(pregunta_usuario, contexto_rag, sql, resultado)
-            return sql, resultado
+            return sql, resultado, (columnas, filas)
         except ProgrammingError as error:
             print(f"Intento {intento + 1} falló (SQL inválido): {error}")
             error_previo = str(error)
@@ -125,7 +125,7 @@ def generar_y_ejecutar(pregunta_usuario: str, contexto_rag: str, intentos: int =
 
     resultado = "No pude generar una consulta SQL válida para esa pregunta. ¿Podés reformularla?"
     loggear_corrida(pregunta_usuario, contexto_rag, sql, resultado)
-    return sql, resultado
+    return sql, resultado, None
 
 
 def loggear_corrida(pregunta, contexto_rag, sql, resultado):
