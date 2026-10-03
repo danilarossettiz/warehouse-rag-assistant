@@ -1,5 +1,5 @@
 """
-scripts/responder_definicion.py
+scripts/generar_respuestas.py
 
 Genera respuestas en lenguaje natural para preguntas definicionales,
 usando RAG (retrieval.py) como fuente de contexto y Gemini para

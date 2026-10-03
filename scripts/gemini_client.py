@@ -18,9 +18,11 @@ def llamar_gemini(prompt: str, intentos: int = 3) -> str:
         try:
             response = requests.post(
                 f"{API_URL}?key={API_KEY}",
-                json={"contents": [{"parts": [{"text": prompt}]}]},
+                json={ "contents": [{"parts": [{"text": prompt}]}],
+                "generationConfig": {"temperature": 0}, },
                 timeout=30,
             )
+
             response.raise_for_status()
             data = response.json()
             texto = data["candidates"][0]["content"]["parts"][0]["text"]
