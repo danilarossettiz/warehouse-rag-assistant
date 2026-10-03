@@ -243,3 +243,6 @@ data/processed/
 snowflake_rsa_key.p8
 .mcp.json
 data/interacciones.jsonl
+
+# Vector store generado por scripts/build_vector_store.py
+chroma_db/
