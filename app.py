@@ -71,7 +71,7 @@ for mensaje in conversacion["mensajes"]:
 # --- Entrada del usuario ---
 pregunta = st.chat_input("Preguntá sobre los datos de Olist...")
 
-if pregunta:
+if pregunta and pregunta.strip():
     # La primera pregunta le pone título a la conversación
     if not conversacion["mensajes"]:
         recorte = pregunta[:40]
