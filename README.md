@@ -23,6 +23,7 @@ Proyecto final de la diplomatura en Machine Learning e Inteligencia Artificial.
 │   └── eval/           # Scripts de evaluación del sistema (RAG, clasificador, pipeline completo)
 ├── data/               # Datasets, embeddings e índices intermedios
 ├── models/             # Modelos serializados del clasificador de intención
+├── tests/              # Tests automatizados (pytest) del clasificador y el retrieval
 └── docs/               # Documentación del proyecto (decisiones de diseño, notas de evaluación)
 ```
 
@@ -30,6 +31,18 @@ Proyecto final de la diplomatura en Machine Learning e Inteligencia Artificial.
 - **`scripts/`** — Toda la lógica de la aplicación: `orquestador.py` conecta clasificador de intención, RAG y Text-to-SQL; `scripts/pipeline/` prepara los datos (dataset, embeddings, entrenamiento); `scripts/eval/` evalúa el sistema.
 - **`app.py`** — Interfaz de chat en Streamlit; solo presenta lo que devuelve `responder()` del orquestador.
 - **`docs/`** — Documentación a nivel proyecto (decisiones de diseño, resultados de evaluación). No confundir con la documentación de dbt, que vive dentro de `dbt/`.
+
+## Tests
+
+```
+pip install -r requirements.txt
+python3 -m scripts.pipeline.build_vector_store  # genera chroma_db/ a partir de data/dbt_docs_embeddings.json (no se versiona en git)
+pytest
+```
+
+Los tests de `tests/test_retrieval.py` necesitan el índice de Chroma en `chroma_db/`; si no existe, se saltan solos con un mensaje explicando cómo generarlo. La primera corrida tarda unos segundos de más porque carga el modelo de embeddings en memoria.
+
+Dos casos están marcados con `xfail` porque documentan defectos conocidos (no arreglados todavía): el clasificador confunde la definición de `orders_rank` con una métrica, y el prefijo de contexto que antepone `orquestador._armar_pregunta_efectiva` a las preguntas de seguimiento degrada el retrieval de `delivery_days`. Si algún día se corrigen, pytest lo va a marcar como fallo (`XPASS`) para que te enteres.
 
 ## Roadmap
 
