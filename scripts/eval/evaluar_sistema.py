@@ -1,8 +1,8 @@
 """
-scripts/evaluar_sistema.py
+scripts/eval/evaluar_sistema.py
 
 Corre el set de evaluación completo por responder() y compara contra lo
-esperado. Se ejecuta con: python3 -m scripts.evaluar_sistema
+esperado. Se ejecuta con: python3 -m scripts.eval.evaluar_sistema
 
 - Métricas: se ejecuta la query de referencia y se comparan los datos
   (no el SQL). Se repiten REPETICIONES_METRICA veces por la variación

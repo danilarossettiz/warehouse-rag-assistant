@@ -1,5 +1,5 @@
 """
-scripts/probar_umbral.py
+scripts/eval/probar_umbral.py
 
 Corre retrieve() sobre preguntas dentro y fuera de alcance
 para calibrar el umbral de distancia coseno de rechazo.

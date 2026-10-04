@@ -145,7 +145,7 @@ def main():
     with open(REPORT_PATH, "w", encoding="utf-8") as f:
         f.write("# Resultados del clasificador de intencion\n\n")
         f.write(
-            f"Generado automaticamente por `scripts/train_intent_classifier.py` "
+            f"Generado automaticamente por `scripts/pipeline/train_intent_classifier.py` "
             f"el {datetime.now().strftime('%Y-%m-%d %H:%M')}.\n\n"
         )
         f.write(f"Vocabulario TF-IDF: {len(vectorizer.vocabulary_)} palabras.\n\n")

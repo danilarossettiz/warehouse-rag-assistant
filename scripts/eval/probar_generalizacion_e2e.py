@@ -1,5 +1,5 @@
 """
-scripts/probar_generalizacion_e2e.py
+scripts/eval/probar_generalizacion_e2e.py
 
 Evalúa las 7 preguntas de generalización a través del orquestador
 completo (responder()), en vez de llamar a generar_y_ejecutar()

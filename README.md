@@ -14,17 +14,21 @@ Proyecto final de la diplomatura en Machine Learning e Inteligencia Artificial.
 
 ```
 .
-├── dbt/          # Warehouse: modelos de dbt, transformaciones y documentación
-├── rag/          # Búsqueda semántica: embeddings + retrieval sobre la doc de dbt
-├── classifier/   # Clasificador de intención (ML clásico)
-├── app/          # Capa de integración: enruta preguntas a RAG o a Text-to-SQL
-└── docs/         # Documentación del proyecto (decisiones de diseño, notas de evaluación)
+├── app.py              # Interfaz de chat en Streamlit
+├── dbt/                # Warehouse: modelos de dbt, transformaciones y documentación
+├── scripts/
+│   ├── orquestador.py  # Enruta cada pregunta a RAG o a Text-to-SQL y devuelve la respuesta
+│   ├── retrieval.py, classify_intent.py, text_to_sql.py, ...  # Módulos que usa el orquestador
+│   ├── pipeline/       # Scripts de una sola corrida: descarga de datos, embeddings, entrenamiento del clasificador
+│   └── eval/           # Scripts de evaluación del sistema (RAG, clasificador, pipeline completo)
+├── data/               # Datasets, embeddings e índices intermedios
+├── models/             # Modelos serializados del clasificador de intención
+└── docs/               # Documentación del proyecto (decisiones de diseño, notas de evaluación)
 ```
 
 - **`dbt/`** — Capa de warehouse construida con dbt sobre Snowflake. Incluye modelos, transformaciones y la documentación que después alimenta al RAG.
-- **`rag/`** — Búsqueda semántica sobre la documentación de dbt: generación de embeddings y lógica de recuperación.
-- **`classifier/`** — Clasificador de intención con ML clásico: determina si la pregunta del usuario es una métrica, una definición, o está fuera de alcance.
-- **`app/`** — El asistente en sí: recibe la pregunta, clasifica la intención, decide si usa RAG o Text-to-SQL, y devuelve la respuesta.
+- **`scripts/`** — Toda la lógica de la aplicación: `orquestador.py` conecta clasificador de intención, RAG y Text-to-SQL; `scripts/pipeline/` prepara los datos (dataset, embeddings, entrenamiento); `scripts/eval/` evalúa el sistema.
+- **`app.py`** — Interfaz de chat en Streamlit; solo presenta lo que devuelve `responder()` del orquestador.
 - **`docs/`** — Documentación a nivel proyecto (decisiones de diseño, resultados de evaluación). No confundir con la documentación de dbt, que vive dentro de `dbt/`.
 
 ## Roadmap
@@ -33,4 +37,4 @@ El proyecto está organizado en 7 etapas: Setup → Warehouse → RAG → Clasif
 
 ## Estado
 
-🚧 En progreso — etapa de setup del proyecto.
+✅ Pipeline completo (dbt + RAG + clasificador de intención + Text-to-SQL) integrado en `orquestador.py` y expuesto vía una interfaz de chat en Streamlit (`app.py`). Evaluación end-to-end en curso (`scripts/eval/`).
